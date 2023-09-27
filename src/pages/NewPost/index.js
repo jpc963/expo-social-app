@@ -1,7 +1,6 @@
 import { useState, useLayoutEffect, useContext } from "react"
 import { useNavigation } from "@react-navigation/native"
-
-import { FIREBASE_DB, FIREBASE_STORAGE } from "../../../firebaseConfig"
+import { db, storage } from "../../../firebaseConfig"
 import { ref, getDownloadURL } from "firebase/storage"
 import { addDoc, collection } from "firebase/firestore"
 import { AuthContext } from "../../contexts/auth"
@@ -31,16 +30,14 @@ export default function NewPost() {
 		let avatarUrl = null
 
 		try {
-			let response = await getDownloadURL(
-				ref(FIREBASE_STORAGE, `users/${user.uid}/perfil.jpg`)
-			)
+			let response = await getDownloadURL(ref(storage, `users/${user.uid}`))
 			avatarUrl = response
 		} catch (error) {
 			avatarUrl = null
 			console.log(error)
 		}
 
-		await addDoc(collection(FIREBASE_DB, "posts"), {
+		await addDoc(collection(db, "posts"), {
 			created: new Date(),
 			content: post,
 			autor: user.nome,
@@ -50,7 +47,6 @@ export default function NewPost() {
 		})
 			.then(() => {
 				setPost("")
-				console.log("Post criado com sucesso!")
 				navigation.goBack()
 			})
 			.catch((error) => {

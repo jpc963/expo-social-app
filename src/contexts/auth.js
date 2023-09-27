@@ -1,11 +1,11 @@
 import { useState, createContext, useEffect } from "react"
-import { FIREBASE_AUTH, FIREBASE_DB } from "../../firebaseConfig"
+import { auth, db } from "../../firebaseConfig"
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signOut,
 } from "firebase/auth"
-import { doc, setDoc, getDoc, addDoc, collection } from "firebase/firestore"
+import { doc, setDoc, getDoc } from "firebase/firestore"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export const AuthContext = createContext()
@@ -32,10 +32,10 @@ function AuthProvider({ children }) {
 
 	async function signIn(email, password) {
 		setLoadingAuth(true)
-		await signInWithEmailAndPassword(FIREBASE_AUTH, email, password)
+		await signInWithEmailAndPassword(auth, email, password)
 			.then(async (value) => {
 				let uid = value.user.uid
-				const userProfile = await getDoc(doc(FIREBASE_DB, "users", uid))
+				const userProfile = await getDoc(doc(db, "users", uid))
 
 				let data = {
 					uid: uid,
@@ -54,10 +54,10 @@ function AuthProvider({ children }) {
 
 	async function signUp(email, password, name) {
 		setLoadingAuth(true)
-		await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password)
+		await createUserWithEmailAndPassword(auth, email, password)
 			.then(async (value) => {
 				let uid = value.user.uid
-				await setDoc(doc(FIREBASE_DB, "users", uid), {
+				await setDoc(doc(db, "users", uid), {
 					nome: name,
 					email: value.user.email,
 				}).then(async () => {
@@ -78,7 +78,7 @@ function AuthProvider({ children }) {
 	}
 
 	async function signOutApp() {
-		await signOut(FIREBASE_AUTH)
+		await signOut(auth)
 		await AsyncStorage.clear().then(() => {
 			setUser(null)
 		})
@@ -93,11 +93,13 @@ function AuthProvider({ children }) {
 			value={{
 				signed: !!user,
 				user,
+				setUser,
 				signUp,
 				signIn,
 				signOutApp,
 				loadingAuth,
 				loading,
+				storageUser,
 			}}
 		>
 			{children}

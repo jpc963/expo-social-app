@@ -1,15 +1,14 @@
 import { useState, useContext, useEffect } from "react"
 import { useNavigation } from "@react-navigation/native"
 import { AuthContext } from "../../contexts/auth"
-import { FIREBASE_DB } from "../../../firebaseConfig"
+import { db } from "../../../firebaseConfig"
 import { collection, query, orderBy, onSnapshot } from "firebase/firestore"
-
 import { View, ActivityIndicator } from "react-native"
 import { Feather } from "@expo/vector-icons"
-import { Container, ButtonPost, ListPosts } from "./styles"
-
 import Header from "../../components/Header"
 import PostsList from "../../components/PostsList"
+
+import { Container, ButtonPost, ListPosts } from "./styles"
 
 export default function Home() {
 	const navigation = useNavigation()
@@ -19,7 +18,7 @@ export default function Home() {
 
 	useEffect(() => {
 		const subscriber = onSnapshot(
-			query(collection(FIREBASE_DB, "posts"), orderBy("created", "desc")),
+			query(collection(db, "posts"), orderBy("created", "desc")),
 			(snapshot) => {
 				const postList = []
 

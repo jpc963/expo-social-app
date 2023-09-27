@@ -11,6 +11,9 @@ import {
 	SignUpButton,
 	SignUpButtonText,
 } from "./styles"
+import * as Animatable from "react-native-animatable"
+
+const TitleAnimatable = Animatable.createAnimatableComponent(Title)
 
 export default function Login() {
 	const { signUp, signIn, loadingAuth } = useContext(AuthContext)
@@ -45,9 +48,9 @@ export default function Login() {
 	if (login) {
 		return (
 			<Container>
-				<Title>
+				<TitleAnimatable animation={"flipInY"}>
 					Dev<Text style={{ color: "#e52246" }}>Post</Text>
-				</Title>
+				</TitleAnimatable>
 
 				<Input
 					placeholder="Email"
@@ -81,9 +84,9 @@ export default function Login() {
 
 	return (
 		<Container>
-			<Title>
+			<TitleAnimatable animation={"fadeInDown"}>
 				Dev<Text style={{ color: "#e52246" }}>Post</Text>
-			</Title>
+			</TitleAnimatable>
 
 			<Input
 				placeholder="Nome"
