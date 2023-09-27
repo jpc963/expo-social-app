@@ -19,8 +19,8 @@ export default function Login() {
 	const { signUp, signIn, loadingAuth } = useContext(AuthContext)
 	const [login, setLogin] = useState(true)
 	const [name, setName] = useState("")
-	const [email, setEmail] = useState("teste@teste.com")
-	const [password, setPassword] = useState("221210")
+	const [email, setEmail] = useState("")
+	const [password, setPassword] = useState("")
 
 	function toggleLogin() {
 		setLogin(!login)
